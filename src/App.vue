@@ -2,12 +2,14 @@
   <div id="app">
     <img src="./assets/logo.png">
     <router-view/>
+    <div>{{msg}}</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  props: ['msg']
 }
 </script>
 
