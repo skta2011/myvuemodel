@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
-    <div>{{msg}}</div>
+    <transition name="fade"
+		            mode="out-in">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
-  props: ['msg']
+  name: 'App'
 }
 </script>
 
