@@ -4,12 +4,12 @@
         <el-container>
           <el-header>导航栏头</el-header>
           <el-main>
-            <el-menu :default-active="$route.path" @open="handleopen" @close="handleclose" @select="handleselect"
+            <el-menu :default-active="$route.path" 
               unique-opened router v-show="!collapsed">
               <template v-for="(item,index) in $router.options.routes">
-                <el-submenu :index="index+''" v-if="!item.leaf">
-                  <template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-                  <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
+                <el-submenu :index="index+''" v-if="item.children">
+                  <template slot="title">{{item.name}}</template>
+                  <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" >{{child.name}}</el-menu-item>
                 </el-submenu>
                 <el-menu-item v-if="!item.children" :index="item.path">{{item.name}}</el-menu-item>
               </template>
@@ -20,7 +20,11 @@
       <el-col :span="20">
         <el-container>
           <el-header>标头</el-header>
-          <el-main>主页内容</el-main>
+          <el-main>
+            <transition name="fade" mode="out-in">
+							<router-view></router-view>
+						</transition>
+          </el-main>
         </el-container>
       </el-col>
     </el-row>

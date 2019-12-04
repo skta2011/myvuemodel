@@ -13,8 +13,7 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
 @import '~scss_temp';
 
 html,body{
