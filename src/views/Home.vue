@@ -6,12 +6,12 @@
           <el-main>
             <el-menu :default-active="$route.path" 
               unique-opened router v-show="!collapsed">
-              <template v-for="(item,index) in $router.options.routes">
-                <el-submenu :index="index+''" v-if="item.children">
+              <template v-for="(item,index) in $router.options.routes" >
+                <el-submenu :index="index+''" v-if="item.children && !item.oneLeafFlag">
                   <template slot="title">{{item.name}}</template>
                   <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" >{{child.name}}</el-menu-item>
                 </el-submenu>
-                <el-menu-item v-if="!item.children" :index="item.path">{{item.name}}</el-menu-item>
+                <el-menu-item v-if="item.oneLeafFlag" :index="item.children[0].path">{{item.name}}</el-menu-item>
               </template>
             </el-menu>
           </el-main>

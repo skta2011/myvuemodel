@@ -6,8 +6,10 @@ import ElementUI from 'element-ui'
 
 import App from './App'
 import routes from './routes'
-
+import Mock from './mock/mock'
 import 'element-ui/lib/theme-chalk/index.css'
+
+Mock.init();
 
 Vue.config.productionTip = false
 

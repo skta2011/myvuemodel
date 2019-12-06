@@ -1,5 +1,5 @@
 <template>
-  <div>1</div>
+  <div>{{content}}</div>
 </template>
 
 <script>
@@ -7,7 +7,7 @@ export default {
   name: 'mainpage',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      content: 'mainpage'
     }
   }
 }

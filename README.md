@@ -20,7 +20,8 @@ practise model
 https://element.eleme.cn/#/zh-CN/
 
 主页
-	1、内管业务页面主要是日常内管ui界面，包含丰富的页面操作
+	1、内容介绍
+	2、样式风格切换
 		
 内管业务
 	基础查询、
