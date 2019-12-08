@@ -9,7 +9,7 @@ for(let i = 0; i < 36; i ++){
         addr : Mock.mock('@county(true)'),
         birthday : Mock.Random.date(),
         'age|18-28' : 1,
-        'sex|1' : ['男','女']
+        'sex|1' : ['male','female']
     }));
 }
 

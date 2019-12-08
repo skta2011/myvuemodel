@@ -16,8 +16,8 @@ export default {
                 if (name && user.name.indexOf(name) == -1) 
                     return false;
                 if (querysex ){
-                    if(((user.sex ==='男' && querysex === 'male') 
-                        || (user.sex ==='女' && querysex === 'female') )){
+                    if(((user.sex ==='male' && querysex === 'male') 
+                        || (user.sex ==='female' && querysex === 'female') )){
                         return true;
                     }else{
                         return false;
@@ -64,6 +64,28 @@ export default {
                 resolve([200, {
                     code: 200,
                     msg: '删除成功'
+                }]);
+                }, 500);
+            });
+        });
+
+        // 删除
+        mock.onPost('/editUser').reply(req => {
+            let {id, name, sex, birthday, age, addr} = JSON.parse(req.data);
+            _users.forEach(user => {
+                if(user.id === id){
+                    user.name = name;
+                    user.sex = sex;
+                    user.birthday = birthday;
+                    user.age = age;
+                    user.addr = addr;
+                }
+            });
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                resolve([200, {
+                    code: 200,
+                    msg: '修改成功'
                 }]);
                 }, 500);
             });

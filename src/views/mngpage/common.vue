@@ -35,7 +35,7 @@
         </el-table-column>
         <el-table-column prop="name" label="姓名" width="100" sortable>
         </el-table-column>
-        <el-table-column prop="sex" label="性别" width="100"  sortable>
+        <el-table-column prop="sex" label="性别" width="100" :formatter="formatSex"  sortable>
         </el-table-column>
         <el-table-column prop="age" label="年龄" width="100" sortable>
         </el-table-column>
@@ -64,11 +64,38 @@
           ></el-pagination>
 		  </el-col>
     </el-col>
+
+    <el-dialog :title="dialogFormData.title" :visible.sync="dialogFormData.dialogFormVisible">
+      <el-form :model="dialogFormData" label-width="80px" ref="dialogFormData">
+        <el-form-item label="姓名" prop="name">
+					<el-input v-model="dialogFormData.name" auto-complete="off"></el-input>
+				</el-form-item>
+        <el-form-item label="性别">
+					<el-radio-group v-model="dialogFormData.sex">
+						<el-radio class="radio" label="male">男</el-radio>
+						<el-radio class="radio" label="female">女</el-radio>
+					</el-radio-group>
+				</el-form-item>
+        <el-form-item label="年龄">
+					<el-input-number v-model="dialogFormData.age" :min="0" :max="200"></el-input-number>
+				</el-form-item>
+				<el-form-item label="生日">
+					<el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="dialogFormData.birthday"></el-date-picker>
+				</el-form-item>
+				<el-form-item label="地址">
+					<el-input type="textarea" v-model="dialogFormData.addr"></el-input>
+				</el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="dialogFormData.dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click.native="addEditSubmit" :loading="dialogFormData.addLoading">提交</el-button>
+      </div>
+    </el-dialog>
   </el-row>
 </template>
 
 <script>
-import { queryUser,deleteUser } from '@/api/api.js';
+import { queryUser,deleteUser ,editUser } from '@/api/api.js';
 
 export default {
   name: 'mainpage',
@@ -86,6 +113,19 @@ export default {
         pageSize : 10,
         pageNow: 1,
         total:0
+      },
+      dialogFormData:{
+        // switch
+        title:"",
+        dialogFormVisible: false,
+        addLoading:false,
+        // data
+        id:'',
+        name:"",
+        sex:"male",
+        age:"",
+        birthday:"",
+        addr:''
       }
     }
   },
@@ -139,7 +179,16 @@ export default {
 				});
     },
     handleEdit: function(index, row){
-      console.log(row.id);
+      this.dialogFormData.id = row.id;
+      this.dialogFormData.name = row.name;
+      this.dialogFormData.sex = row.sex;
+      this.dialogFormData.birthday = row.birthday;
+      this.dialogFormData.age = row.age;
+      this.dialogFormData.addr = row.addr;
+
+      this.dialogFormData.title = '修改' + row.name + '的人员信息';
+      this.dialogFormData.dialogFormVisible = true;
+      this.dialogFormData.listLoading = false;
     },
     selsChange: function (sels) {
       console.log(sels);
@@ -153,7 +202,45 @@ export default {
     },
     resetForm : function(formname){
       this.$refs[formname].resetFields();
-    }
+    },
+    addEditSubmit:function(){
+      this.$confirm('确认提交修改吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.dialogFormData.listLoading = true;
+					// NProgress.start();
+          let para = Object.assign({}, this.dialogFormData);
+          para.birthday = this.dialogFormData.birthday;
+					editUser(para).then((res) => {
+            this.dialogFormData.listLoading = false;
+            this.dialogFormData.dialogFormVisible = false;
+            if(res.code === 200 ){
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              });
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.msg
+              }); 
+            }
+						// NProgress.done();
+						this.queryTableData();
+          });
+				}).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消修改'
+          });  
+				});
+
+    },
+    formatSex:function(row, column){
+      return row.sex == 'male' ? '男' : row.sex == 'female' ? '女' : '未知';
+    },
   },
   mounted(){
     this.queryTableData();
@@ -177,8 +264,15 @@ export default {
       border-radius: 6px;
       padding: 10px;
     }
-    .el-form-item{
-      margin-bottom: 0px;
+    .search-col{
+      .el-form-item{
+        margin-bottom: 0px;
+      }
+    }
+    .el-dialog{
+      .el-form-item{
+        margin-bottom: 15px;
+      }
     }
   }
 </style>
